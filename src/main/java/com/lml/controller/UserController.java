@@ -1,8 +1,10 @@
 package com.lml.controller;
 
+import com.auth0.jwt.JWT;
 import com.lml.pojo.Result;
 import com.lml.pojo.User;
 import com.lml.service.UserService;
+import com.lml.utils.JwtUtil;
 import com.lml.utils.Md5Util;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -42,8 +47,12 @@ public class UserController {
         }
 
         if(Md5Util.getMD5String(password).equals(user.getPassword())){
-            return Result.success("jwt token");
-
+            //登录成功
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("id",user.getId());
+            claims.put("username",user.getUsername());
+            String token = JwtUtil.genToken(claims);
+            return Result.success(token);
         }
 
         return Result.error("密码错误");
