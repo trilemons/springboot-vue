@@ -25,4 +25,7 @@ public interface UserMapper {
     //这里的方法不能重载
     @Update("update user set user_pic=#{avatarUrl},update_time=now() where id=#{id}")
     void updateAvatar(String avatarUrl, int id);
+
+    @Update("update user set password=#{password},update_time=now() where id=#{id}")
+    void updatePwd(String password,int id);
 }

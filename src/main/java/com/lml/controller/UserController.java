@@ -7,7 +7,9 @@ import com.lml.utils.JwtUtil;
 import com.lml.utils.Md5Util;
 import com.lml.utils.ThreadLocalUtil;
 import jakarta.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,8 +75,30 @@ public class UserController {
     }
 
     @PatchMapping("/updateAvatar")
-    public Result updateAvatar(@RequestParam String avatarUrl){
+    public Result updateAvatar(@RequestParam @URL String avatarUrl){
         userService.updateAvater(avatarUrl);
         return Result.success(avatarUrl);
+    }
+
+    @PatchMapping("/updatePwd")
+    public Result updatePwd(@RequestBody Map<String,String>params){
+        Map claims = (Map) ThreadLocalUtil.get();
+        String username = (String) claims.get("username");
+        if(!StringUtils.hasLength(params.get("old_pwd"))||!StringUtils.hasLength(params.get("old_pwd"))||!StringUtils.hasLength(params.get("old_pwd"))){
+            return Result.error("密码不能为空");
+        }else {
+            if(Md5Util.getMD5String(params.get("old_pwd")).equals(userService.getByUserName(username).getPassword())){
+                if(params.get("new_pwd").equals(params.get("re_pwd"))){
+                    userService.updatePwd(params.get("new_pwd"));
+                    return Result.success();
+                }else{
+                    return Result.error("两次密码输入不一致");
+                }
+            }else {
+                return Result.error("原密码输入错误");
+            }
+        }
+
+
     }
 }
