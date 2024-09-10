@@ -5,6 +5,7 @@ import com.lml.pojo.User;
 import com.lml.service.UserService;
 import com.lml.utils.JwtUtil;
 import com.lml.utils.Md5Util;
+import com.lml.utils.ThreadLocalUtil;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -56,8 +57,8 @@ public class UserController {
     }
 
     @GetMapping("/detail")
-    public Result<User> detail(@RequestHeader("authorization") String token){
-        Map<String, Object> claims = JwtUtil.parseToken(token);
+    public Result<User> detail(){
+        Map claims = (Map) ThreadLocalUtil.get();
         String username = (String) claims.get("username");
 
         User user = userService.getByUserName(username);
