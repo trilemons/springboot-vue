@@ -1,6 +1,5 @@
 package com.lml.controller;
 
-import com.auth0.jwt.JWT;
 import com.lml.pojo.Result;
 import com.lml.pojo.User;
 import com.lml.service.UserService;
@@ -56,7 +55,6 @@ public class UserController {
         }
 
         return Result.error("密码错误");
-        
     }
 
 
