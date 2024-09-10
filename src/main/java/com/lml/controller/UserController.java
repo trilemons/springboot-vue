@@ -64,4 +64,17 @@ public class UserController {
         User user = userService.getByUserName(username);
         return Result.success(user);
     }
+
+    @PutMapping("/update")
+    //注意只有下面配置了@Validated注解，实体类User中的@Email@Pattern@NotNUll才能生效
+    public Result update(@RequestBody @Validated User user){
+        userService.update(user);
+        return Result.success();
+    }
+
+    @PatchMapping("/updateAvatar")
+    public Result updateAvatar(@RequestParam String avatarUrl){
+        userService.updateAvater(avatarUrl);
+        return Result.success(avatarUrl);
+    }
 }

@@ -1,10 +1,7 @@
 package com.lml.mapper;
 
 import com.lml.pojo.User;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface UserMapper {
@@ -17,8 +14,15 @@ public interface UserMapper {
 //    )
     User selectByUserName(String username);
 
-    @Select("insert into user(username,password,create_time,update_time)"+
+    @Insert("insert into user(username,password,create_time,update_time)"+
             "values (#{username},#{password},now(),now())")
     void save(String username,String password);
 
+
+    @Update("update user set nickname=#{nickname},email=#{email},update_time=#{updateTime} where id = #{id}")
+    void update(User user);
+
+    //这里的方法不能重载
+    @Update("update user set user_pic=#{avatarUrl},update_time=now() where id=#{id}")
+    void updateAvatar(String avatarUrl, int id);
 }
