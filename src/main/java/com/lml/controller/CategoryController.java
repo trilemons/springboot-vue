@@ -18,8 +18,9 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+
     @PostMapping
-    public Result add(@RequestBody @Validated Category category){
+    public Result add(@RequestBody @Validated(Category.Add.class) Category category){
         List<Category> list = categoryService.list();
         Set<String> categoryNameSet = new HashSet<>();
         for(Category cateGory : list){
@@ -47,7 +48,7 @@ public class CategoryController {
     }
 
     @PutMapping
-    public Result update(@RequestBody @Validated Category category){
+    public Result update(@RequestBody @Validated(Category.Update.class) Category category){
         List<Category> list = categoryService.list();
         Set<String> categoryNameSet = new HashSet<>();
         for(Category cateGory : list){

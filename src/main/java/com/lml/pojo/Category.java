@@ -10,6 +10,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 @Data
 public class Category {
+    //分组校验id只有在更新的时候才会要求为notnull
     @NotNull(groups = Update.class)
     private Integer id;//主键ID
     @NotEmpty
@@ -25,7 +26,6 @@ public class Category {
 
     //如果说某个校验项没有指定分组,默认属于Default分组
     //分组之间可以继承, A extends B  那么A中拥有B中所有的校验项
-
 
     public interface Add extends Default {
 

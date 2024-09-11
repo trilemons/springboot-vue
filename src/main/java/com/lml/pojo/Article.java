@@ -1,6 +1,7 @@
 package com.lml.pojo;
 
 
+import com.lml.annotation.State;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -21,7 +22,7 @@ public class Article {
     @URL
     private String coverImg;//封面图像
 
-//    @State
+    @State
     private String state;//发布状态 已发布|草稿
     @NotNull
     private Integer categoryId;//文章分类id
