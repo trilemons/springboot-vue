@@ -17,7 +17,7 @@ public class ArticleController {
     private ArticleService articleService;
 
     @PostMapping
-    public Result add(@RequestBody @Validated Article article) {
+    public Result<?> add(@RequestBody @Validated Article article) {
         articleService.add(article);
         return Result.success();
     }
@@ -43,13 +43,13 @@ public class ArticleController {
     }
 
     @PutMapping
-    public Result update(@RequestBody @Validated(Article.Update.class) Article article){
+    public Result<?> update(@RequestBody @Validated(Article.Update.class) Article article){
         articleService.update(article);
         return Result.success();
     }
 
     @DeleteMapping
-    public Result delete(int id){
+    public Result<?> delete(int id){
         Article article = articleService.selectById(id);
         if (null==article){
             return Result.error("the article you want to delete is null");

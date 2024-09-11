@@ -25,7 +25,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public Result register(@Pattern(regexp = "^\\S{5,16}$") String username, @Pattern(regexp = "^\\S{5,16}$")String password){
+    public Result<?> register(@Pattern(regexp = "^\\S{5,16}$") String username, @Pattern(regexp = "^\\S{5,16}$")String password){
 
         User user = userService.getByUserName(username);
 
@@ -53,14 +53,15 @@ public class UserController {
             //获取令牌
             String token = JwtUtil.genToken(claims);
             //将令牌信息返回
-            return Result.success(token);        }
+            return Result.success(token);
+        }
 
         return Result.error("密码错误");
     }
 
     @GetMapping("/detail")
     public Result<User> detail(){
-        Map claims = (Map) ThreadLocalUtil.get();
+        Map<String,Object> claims = (Map<String,Object>) ThreadLocalUtil.get();
         String username = (String) claims.get("username");
 
         User user = userService.getByUserName(username);
@@ -69,20 +70,20 @@ public class UserController {
 
     @PutMapping("/update")
     //注意只有下面配置了@Validated注解，实体类User中的@Email@Pattern@NotNUll才能生效
-    public Result update(@RequestBody @Validated User user){
+    public Result<?> update(@RequestBody @Validated User user){
         userService.update(user);
         return Result.success();
     }
 
     @PatchMapping("/updateAvatar")
-    public Result updateAvatar(@RequestParam @URL String avatarUrl){
+    public Result<?> updateAvatar(@RequestParam @URL String avatarUrl){
         userService.updateAvater(avatarUrl);
         return Result.success(avatarUrl);
     }
 
     @PatchMapping("/updatePwd")
-    public Result updatePwd(@RequestBody Map<String,String>params){
-        Map claims = (Map) ThreadLocalUtil.get();
+    public Result<?> updatePwd(@RequestBody Map<String,String>params){
+        Map<String,Object> claims = (Map<String,Object>) ThreadLocalUtil.get();
         String username = (String) claims.get("username");
         if(!StringUtils.hasLength(params.get("old_pwd"))||!StringUtils.hasLength(params.get("old_pwd"))||!StringUtils.hasLength(params.get("old_pwd"))){
             return Result.error("密码不能为空");

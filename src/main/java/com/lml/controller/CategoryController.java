@@ -20,7 +20,7 @@ public class CategoryController {
 
 
     @PostMapping
-    public Result add(@RequestBody @Validated(Category.Add.class) Category category){
+    public Result<?> add(@RequestBody @Validated(Category.Add.class) Category category){
         List<Category> list = categoryService.list();
         Set<String> categoryNameSet = new HashSet<>();
         for(Category cateGory : list){
@@ -35,7 +35,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public Result<List> selectAll(){
+    public Result<List<Category>> selectAll(){
         List<Category> list = categoryService.list();
         return Result.success(list);
     }
@@ -48,7 +48,7 @@ public class CategoryController {
     }
 
     @PutMapping
-    public Result update(@RequestBody @Validated(Category.Update.class) Category category){
+    public Result<?> update(@RequestBody @Validated(Category.Update.class) Category category){
         List<Category> list = categoryService.list();
         Set<String> categoryNameSet = new HashSet<>();
         for(Category cateGory : list){
@@ -62,7 +62,7 @@ public class CategoryController {
     }
 
     @DeleteMapping
-    private Result delete(@RequestParam int id){
+    private Result<?> delete(@RequestParam int id){
         Category category = categoryService.findById(id);
         if (category==null)
             return Result.error("要删除的类别不存在");
