@@ -1,5 +1,8 @@
 package com.lml.service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.lml.mapper.ArticleMapper;
 import com.lml.pojo.Article;
 import com.lml.pojo.PageBean;
@@ -8,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -28,6 +32,24 @@ public class ArticleServiceImp implements ArticleService{
 
     @Override
     public PageBean<Article> list(Integer pageNum, Integer pageSize, Integer categoryId, String state) {
-        return null;
+        //创建封装对象
+        PageBean<Article> articlePageBean = new PageBean<>();
+        Map map = (Map) ThreadLocalUtil.get();
+        int userId = (int) map.get("id");
+        //创建分页
+        PageHelper.startPage(pageNum,pageSize);
+
+        List<Article> list = articleMapper.list(userId, categoryId, state);
+
+//        //Page中提供了方法，可以得到在经过PageHelper分页查询后的总条数和当前页数据
+//        Page<Article> articlePage = (Page<Article>) list;
+
+        // 获取分页信息
+        PageInfo<Article> pageInfo = new PageInfo<>(list);
+
+        articlePageBean.setTotal(pageInfo.getTotal());
+        articlePageBean.setItems(pageInfo.getList());
+
+        return articlePageBean;
     }
 }
