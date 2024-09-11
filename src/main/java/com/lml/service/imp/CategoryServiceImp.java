@@ -1,7 +1,8 @@
-package com.lml.service;
+package com.lml.service.imp;
 
 import com.lml.mapper.CategoryMapper;
 import com.lml.pojo.Category;
+import com.lml.service.CategoryService;
 import com.lml.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class CategoryServiceImp implements CategoryService{
+public class CategoryServiceImp implements CategoryService {
 
     @Autowired
     private CategoryMapper categoryMapper;

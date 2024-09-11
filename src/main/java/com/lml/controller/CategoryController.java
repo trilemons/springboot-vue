@@ -63,6 +63,9 @@ public class CategoryController {
 
     @DeleteMapping
     private Result delete(@RequestParam int id){
+        Category category = categoryService.findById(id);
+        if (category==null)
+            return Result.error("要删除的类别不存在");
         categoryService.deleteById(id);
         return Result.success();
     }

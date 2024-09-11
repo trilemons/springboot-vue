@@ -32,4 +32,29 @@ public class ArticleController {
        PageBean<Article> pb =  articleService.list(pageNum,pageSize,categoryId,state);
        return Result.success(pb);
     }
+
+    @GetMapping("/detail")
+    public Result<Article> selectById(int id){
+        Article article = articleService.selectById(id);
+        if(article==null)
+            return Result.error("该文章不存在");
+
+        return Result.success(article);
+    }
+
+    @PutMapping
+    public Result update(@RequestBody @Validated(Article.Update.class) Article article){
+        articleService.update(article);
+        return Result.success();
+    }
+
+    @DeleteMapping
+    public Result delete(int id){
+        Article article = articleService.selectById(id);
+        if (null==article){
+            return Result.error("the article you want to delete is null");
+        }
+        articleService.delete(id);
+        return Result.success();
+    }
 }

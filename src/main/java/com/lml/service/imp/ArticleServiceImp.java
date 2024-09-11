@@ -1,4 +1,4 @@
-package com.lml.service;
+package com.lml.service.imp;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.lml.mapper.ArticleMapper;
 import com.lml.pojo.Article;
 import com.lml.pojo.PageBean;
+import com.lml.service.ArticleService;
 import com.lml.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,26 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ArticleServiceImp implements ArticleService{
+public class ArticleServiceImp implements ArticleService {
     @Autowired
     private ArticleMapper articleMapper;
+
+    @Override
+    public Article selectById(int id) {
+        return articleMapper.selectById(id);
+    }
+
+    @Override
+    public void update(Article article) {
+        article.setUpdateTime(LocalDateTime.now());
+        articleMapper.update(article);
+    }
+
+    @Override
+    public void delete(int id) {
+        articleMapper.deleteById(id);
+    }
+
     @Override
     public void add(Article article) {
         article.setCreateTime(LocalDateTime.now());

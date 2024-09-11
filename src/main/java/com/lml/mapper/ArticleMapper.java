@@ -1,8 +1,7 @@
 package com.lml.mapper;
 
 import com.lml.pojo.Article;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -15,4 +14,13 @@ public interface ArticleMapper {
 
 
     List<Article> list(Integer userId, Integer categoryId, String state);
+
+    @Select("select * from article where id=#{id}")
+    Article selectById(int id);
+
+    @Update("update article set title=#{title},content=#{content},cover_img=#{coverImg},category_id=#{categoryId},state=#{state} where id=#{id}")
+    void update(Article article);
+
+    @Delete("delete from article where id=#{id}")
+    void deleteById(int id);
 }

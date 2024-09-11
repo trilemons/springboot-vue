@@ -1,7 +1,8 @@
-package com.lml.service;
+package com.lml.service.imp;
 
 import com.lml.mapper.UserMapper;
 import com.lml.pojo.User;
+import com.lml.service.UserService;
 import com.lml.utils.Md5Util;
 import com.lml.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
-public class UserServiceImp implements UserService{
+public class UserServiceImp implements UserService {
 
     @Autowired
     private UserMapper userMapper;
