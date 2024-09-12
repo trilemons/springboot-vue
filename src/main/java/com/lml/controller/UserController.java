@@ -58,6 +58,7 @@ public class UserController {
             //获取令牌
             String token = JwtUtil.genToken(claims);
 
+            //将当前登陆的令牌放入redis中
             ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
             ops.set(token,token,30, TimeUnit.MINUTES);
 
@@ -100,7 +101,7 @@ public class UserController {
             if(Md5Util.getMD5String(params.get("old_pwd")).equals(userService.getByUserName(username).getPassword())){
                 if(params.get("new_pwd").equals(params.get("re_pwd"))){
                     userService.updatePwd(params.get("new_pwd"));
-                    stringRedisTemplate.opsForValue().getOperations().delete(token);
+                    stringRedisTemplate.delete(token);
                     return Result.success();
                 }else{
                     return Result.error("两次密码输入不一致");
