@@ -9,12 +9,15 @@ import com.lml.utils.ThreadLocalUtil;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
@@ -23,6 +26,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @PostMapping("/register")
     public Result<?> register(@Pattern(regexp = "^\\S{5,16}$") String username, @Pattern(regexp = "^\\S{5,16}$")String password){
@@ -52,6 +57,10 @@ public class UserController {
             claims.put("username",user.getUsername());
             //获取令牌
             String token = JwtUtil.genToken(claims);
+
+            ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+            ops.set(token,token,30, TimeUnit.MINUTES);
+
             //将令牌信息返回
             return Result.success(token);
         }
@@ -82,7 +91,7 @@ public class UserController {
     }
 
     @PatchMapping("/updatePwd")
-    public Result<?> updatePwd(@RequestBody Map<String,String>params){
+    public Result<?> updatePwd(@RequestBody Map<String,String>params,@RequestHeader("Authorization") String token){
         Map<String,Object> claims = (Map<String,Object>) ThreadLocalUtil.get();
         String username = (String) claims.get("username");
         if(!StringUtils.hasLength(params.get("old_pwd"))||!StringUtils.hasLength(params.get("old_pwd"))||!StringUtils.hasLength(params.get("old_pwd"))){
@@ -91,6 +100,7 @@ public class UserController {
             if(Md5Util.getMD5String(params.get("old_pwd")).equals(userService.getByUserName(username).getPassword())){
                 if(params.get("new_pwd").equals(params.get("re_pwd"))){
                     userService.updatePwd(params.get("new_pwd"));
+                    stringRedisTemplate.opsForValue().getOperations().delete(token);
                     return Result.success();
                 }else{
                     return Result.error("两次密码输入不一致");

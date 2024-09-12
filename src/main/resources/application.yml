@@ -4,6 +4,13 @@ spring:
     url: jdbc:mysql://localhost:3306/big_event
     username: root
     password: 12345654321
+  data:
+    redis:
+      port: 6380
+      host: 192.168.137.134
+      password: 123456
+
+
 
 #自动将pojo的驼峰命名（camel）属性字段映射到数据库的带下划线间隔（eg：user_id ！！！由于数据库不区分大小写）的列属性字段
 mybatis:
